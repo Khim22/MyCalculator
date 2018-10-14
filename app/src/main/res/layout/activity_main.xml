@@ -19,6 +19,8 @@
             android:id="@+id/txt_lower_panel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:textSize="50sp"
+            android:textAlignment="textEnd"
             android:layout_below="@+id/txt_upper_panel"/>
 
     </RelativeLayout>

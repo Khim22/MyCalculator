@@ -2,10 +2,12 @@ package com.example.deunique.mycalculator;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,6 +25,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         upperPanel = findViewById(R.id.txt_upper_panel);
+        buttonList = new ArrayList<Integer>(Arrays.asList(
+                R.id.btn_clear,R.id.btn_mem,R.id.btn_clear_mem,R.id.btn_delete,
+                R.id.btn_plus,R.id.btn_1,R.id.btn_2,R.id.btn_3,
+                R.id.btn_minus,R.id.btn_4,R.id.btn_5,R.id.btn_6,
+                R.id.btn_multiply,R.id.btn_7,R.id.btn_8,R.id.btn_9,
+                R.id.btn_divide,R.id.btn_0,R.id.btn_decimal_point,R.id.btn_equal
+        ));
+
         lowerPanel = findViewById(R.id.txt_lower_panel);
 
         int[] buttons =  new int[]{R.id.btn_clear,R.id.btn_mem,R.id.btn_clear_mem,R.id.btn_delete,
@@ -30,12 +40,12 @@ public class MainActivity extends AppCompatActivity {
                                     R.id.btn_minus,R.id.btn_4,R.id.btn_5,R.id.btn_6,
                                     R.id.btn_multiply,R.id.btn_7,R.id.btn_8,R.id.btn_9,
                                     R.id.btn_divide,R.id.btn_0,R.id.btn_decimal_point,R.id.btn_equal};
-        for(int i = 0; i<buttons.length;i++ ){
-            Button button = findViewById(buttons[i]);
+        for(int i = 0; i<buttonList.size();i++ ){
+            Button button = findViewById(buttonList.get(i));
             button.setOnClickListener(new ButtonHandler());
         }
 
-        sb = new StringBuilder();
+
         memNum = 0;
 
     }
@@ -44,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Button btn = (Button)v;
+            sb = new StringBuilder();
+            sb.append(lowerPanel.getText());
+
             switch(btn.getId()){
                 case R.id.btn_equal:
                     lowerPanel.append("=");
@@ -55,7 +68,10 @@ public class MainActivity extends AppCompatActivity {
                     memNum = 0 ;break;
                 case R.id.btn_delete :
                     sb.deleteCharAt(sb.length()-1) ;
-                    //panel.setText(sb.toString());
+                    lowerPanel.setText(sb.toString());
+                    break;
+                case R.id.btn_clear:
+                    lowerPanel.setText("");
                     break;
                 default: {sb.append(btn.getText());
                             lowerPanel.append(btn.getText());}
@@ -65,9 +81,14 @@ public class MainActivity extends AppCompatActivity {
         private double evaluate(String expression){
             double result =0;
             String reducedExpression;
+            Solver solver = new Solver();
 
-            reducedExpression= expression.replace('×','*');
-            reducedExpression = reducedExpression.replace('÷','/');
+            String exp = lowerPanel.getText().toString();
+            Log.i("Main:exp",exp);
+            upperPanel.setText(lowerPanel.getText().toString());
+            double answer = solver.evaluate(exp);
+            lowerPanel.setText(String.valueOf(answer));
+
 
             //check for start of string ->
             //      if (-) ignore
