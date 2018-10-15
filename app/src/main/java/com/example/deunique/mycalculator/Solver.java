@@ -47,6 +47,13 @@ public class Solver {
             }
         }
 
+        for(double n: numbers){
+            Log.d("numbers b4",String.valueOf(n));
+        }
+        for(String s: operators){
+            Log.d("operators b4",s);
+        }
+
 
 
         //check for start of string ->
@@ -66,38 +73,63 @@ public class Solver {
 
         int i =0;
         while(operatorIterator.hasNext()){
-
+            String op = operatorIterator.next();
             if(operators.indexOf("*")!=0 || operators.indexOf("/")!=0){
                 Log.i("solvedReduced:i(before)", String.valueOf(i));
-                String op = operatorIterator.next();
-                if(op.equals("*")){
-                    Log.i("solvedReduced:i(in *)", String.valueOf(i));
-                    int num = numbers.get(i) * numbers.get(i-1);
-                    numbers.set(i-1,num);
-                    numbers.remove(i);
-                    i--;
-                }
-                else if(op.equals("/")){
-                    Log.i("solvedReduced:i(in /)", String.valueOf(i));
-                    int num = numbers.get(i-1) / numbers.get(i);
-                    numbers.set(i-1,num);
-                    numbers.remove(i);
+                if(op.equals("*") || op.equals("/")){
+                    simplifyNumbersList(i,op);
+                    operators.remove(op);
                     i--;
                 }
                 i++;
                 Log.i("solvedReduced:i(after)", String.valueOf(i));
-
-                for (int j:numbers) {
-                    Log.i("solvedReduced:numbers", String.valueOf(j));
-                }
-
-                boolean test = operators.indexOf("*")!=0 || operators.indexOf("/")!=0;
-                Log.i("solvedReduced:numbers", String.valueOf(test));
+//
+//                for (int j:numbers) {
+//                    Log.i("solvedReduced:numbers", String.valueOf(j));
+//                }
             }
 
+        }
 
+        for(double n: numbers){
+            Log.d("numbers mid",String.valueOf(n));
+        }
+        for(String s: operators){
+            Log.d("operators mid",s);
+        }
+
+        numbersIterator = numbers.iterator();
+        operatorIterator = operators.iterator();
+
+        i=0;
+        while(operatorIterator.hasNext() && operators.size()>1){
+            String op = operatorIterator.next();
+            double n = numbersIterator.next();
+            if(operators.indexOf("+")!=0 || operators.indexOf("-")!=0){
+                Log.i("solvedReduced:i(before)", String.valueOf(i));
+                if((op.equals("+") || op.equals("-")) && i>0){
+                    simplifyNumbersList(i,op);
+                    operators.remove(op);
+                    i--;
+                }
+                i++;
+                Log.i("solvedReduced:i(after)", String.valueOf(i));
+//
+//                for (int j:numbers) {
+//                    Log.i("solvedReduced:numbers", String.valueOf(j));
+//                }
+            }
 
         }
+
+        for(double n: numbers){
+            Log.d("numbers aft",String.valueOf(n));
+        }
+        for(String s: operators){
+            Log.d("operators aft",s);
+        }
+
+
 
 
         for (int j:numbers) {
@@ -106,5 +138,24 @@ public class Solver {
 
         return numbers.get(0);
     }
+
+    private void simplifyNumbersList(int i,String operator) {
+        int num = 0;
+        Log.i("simplifyNum:i(inside)", String.valueOf(i));
+        switch(operator){
+            case "*": num = numbers.get(i) * numbers.get(i-1);break;
+            case "/": num = numbers.get(i) / numbers.get(i-1);break;
+            case "+": num = numbers.get(i) + numbers.get(i-1);break;
+            case "-": num = numbers.get(i) - numbers.get(i-1);break;
+            default: break;
+
+        }
+        numbers.set(i-1,num);
+        numbers.remove(i);
+        for(double n: numbers){
+            Log.d("numbers",String.valueOf(n));
+        }
+    }
+
 
 }
