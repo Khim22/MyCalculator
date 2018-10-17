@@ -72,7 +72,7 @@ public class Solver {
         Iterator<String> operatorIterator = operators.iterator();
 
         int i =0;
-        while(operatorIterator.hasNext()){
+        while(operatorIterator.hasNext() && numbersIterator.hasNext()){
             String op = operatorIterator.next();
             if(operators.indexOf("*")!=0 || operators.indexOf("/")!=0){
                 Log.i("solvedReduced:i(before)", String.valueOf(i));
@@ -102,7 +102,7 @@ public class Solver {
         operatorIterator = operators.iterator();
 
         i=0;
-        while(operatorIterator.hasNext() && operators.size()>1){
+        while(operatorIterator.hasNext() && numbersIterator.hasNext() && operators.size()>1){
             String op = operatorIterator.next();
             double n = numbersIterator.next();
             if(operators.indexOf("+")!=0 || operators.indexOf("-")!=0){
