@@ -141,6 +141,7 @@ public class Solver {
 
     private void simplifyNumbersList(int i,String operator) {
         int num = 0;
+        List<Integer> newNumList = new ArrayList<>(numbers);
         Log.i("simplifyNum:i(inside)", String.valueOf(i));
         switch(operator){
             case "*": num = numbers.get(i) * numbers.get(i-1);break;
@@ -150,11 +151,13 @@ public class Solver {
             default: break;
 
         }
-        numbers.set(i-1,num);
-        numbers.remove(i);
+        newNumList.set(i-1,num);
+        newNumList.remove(i);
+        numbers = newNumList;
         for(double n: numbers){
             Log.d("numbers",String.valueOf(n));
         }
+
     }
 
 
