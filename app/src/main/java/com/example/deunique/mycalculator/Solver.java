@@ -57,24 +57,10 @@ public class Solver {
         }
 
 
-
-        //check for start of string ->
-        //      if (-) ignore
-        //      if num add +
-        //      if / or * null
-        //split string into array 1 (num) and array 2 (operators)
-        //do math
-
         return reducedExpression;
     }
 
     private double solveReducedExpression(String reduced){
-
-        ListIterator<Integer> numbersIterator = numbers.listIterator();
-
-        ListIterator<String> operatorIterator = operators.listIterator();
-
-        int i =0;
 
         for(int j=1; j<operators.size();j++){
             if(operators.get(j).equals("*")||operators.get(j).equals("/")){
@@ -110,56 +96,6 @@ public class Solver {
             Log.d("ops aft minus plus",s);
         }
 
-
-//        while(operatorIterator.hasNext() && numbersIterator.hasNext()){
-//            String op = operatorIterator.next();
-//            if(operators.indexOf("*")!=0 || operators.indexOf("/")!=0){
-//                Log.i("solvedReduced:i(before)", String.valueOf(i));
-//                if(op.equals("*") || op.equals("/")){
-//                    simplifyNumbersList(i,op);
-//                    operators.remove(op);
-//                    i--;
-//                }
-//                i++;
-//                Log.i("solvedReduced:i(after)", String.valueOf(i));
-////
-////                for (int j:numbers) {
-////                    Log.i("solvedReduced:numbers", String.valueOf(j));
-////                }
-//            }
-//
-//        }
-
-
-
-
-//        i=0;
-//        while(operatorIterator.hasNext() && numbersIterator.hasNext() && operators.size()>1){
-//            String op = operatorIterator.next();
-//            double n = numbersIterator.next();
-//            if(operators.indexOf("+")!=0 || operators.indexOf("-")!=0){
-//                Log.i("solvedReduced:i(before)", String.valueOf(i));
-//                if((op.equals("+") || op.equals("-")) && i>0){
-//                    simplifyNumbersList(i,op);
-//                    operatorIterator.remove();
-//                    i--;
-//                }
-//                i++;
-//                Log.i("solvedReduced:i(after)", String.valueOf(i));
-////
-////                for (int j:numbers) {
-////                    Log.i("solvedReduced:numbers", String.valueOf(j));
-////                }
-//            }
-
-//        }
-
-//        for(double n: numbers){
-//            Log.d("numbers aft",String.valueOf(n));
-//        }
-//        for(String s: operators){
-//            Log.d("operators aft",s);
-//        }
 
 
         for (int j:numbers) {

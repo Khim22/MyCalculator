@@ -34,12 +34,7 @@ public class MainActivity extends AppCompatActivity {
         ));
 
         lowerPanel = findViewById(R.id.txt_lower_panel);
-
-        int[] buttons =  new int[]{R.id.btn_clear,R.id.btn_mem,R.id.btn_clear_mem,R.id.btn_delete,
-                                    R.id.btn_plus,R.id.btn_1,R.id.btn_2,R.id.btn_3,
-                                    R.id.btn_minus,R.id.btn_4,R.id.btn_5,R.id.btn_6,
-                                    R.id.btn_multiply,R.id.btn_7,R.id.btn_8,R.id.btn_9,
-                                    R.id.btn_divide,R.id.btn_0,R.id.btn_decimal_point,R.id.btn_equal};
+        
         for(int i = 0; i<buttonList.size();i++ ){
             Button button = findViewById(buttonList.get(i));
             button.setOnClickListener(new ButtonHandler());
@@ -88,15 +83,6 @@ public class MainActivity extends AppCompatActivity {
             upperPanel.setText(lowerPanel.getText().toString());
             double answer = solver.evaluate(exp);
             lowerPanel.setText(String.valueOf(answer));
-
-
-            //check for start of string ->
-            //      if (-) ignore
-            //      if num add +
-            //      if / or * null
-            //split string into array 1 (num) and array 2 (operators)
-            //do math
-
 
 
 
