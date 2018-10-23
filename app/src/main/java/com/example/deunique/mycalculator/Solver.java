@@ -3,8 +3,10 @@ package com.example.deunique.mycalculator;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class Solver {
 
@@ -68,68 +70,96 @@ public class Solver {
 
     private double solveReducedExpression(String reduced){
 
-        Iterator<Integer> numbersIterator = numbers.iterator();
-        Iterator<String> operatorIterator = operators.iterator();
+        ListIterator<Integer> numbersIterator = numbers.listIterator();
+
+        ListIterator<String> operatorIterator = operators.listIterator();
 
         int i =0;
-        while(operatorIterator.hasNext() && numbersIterator.hasNext()){
-            String op = operatorIterator.next();
-            if(operators.indexOf("*")!=0 || operators.indexOf("/")!=0){
-                Log.i("solvedReduced:i(before)", String.valueOf(i));
-                if(op.equals("*") || op.equals("/")){
-                    simplifyNumbersList(i,op);
-                    operators.remove(op);
-                    i--;
-                }
-                i++;
-                Log.i("solvedReduced:i(after)", String.valueOf(i));
-//
-//                for (int j:numbers) {
-//                    Log.i("solvedReduced:numbers", String.valueOf(j));
-//                }
-            }
 
+        for(int j=1; j<operators.size();j++){
+            if(operators.get(j).equals("*")||operators.get(j).equals("/")){
+                simplifyNumbersList(j,operators.get(j));
+                operators.set(j,null);
+            }
         }
+
+        numbers.removeAll(Collections.singleton(null));
+        operators.removeAll(Collections.singleton(null));
 
         for(double n: numbers){
-            Log.d("numbers mid",String.valueOf(n));
+            Log.d("num aft times divide",String.valueOf(n));
         }
         for(String s: operators){
-            Log.d("operators mid",s);
+            Log.d("ops aft times divide",s);
         }
 
-        numbersIterator = numbers.iterator();
-        operatorIterator = operators.iterator();
-
-        i=0;
-        while(operatorIterator.hasNext() && numbersIterator.hasNext() && operators.size()>1){
-            String op = operatorIterator.next();
-            double n = numbersIterator.next();
-            if(operators.indexOf("+")!=0 || operators.indexOf("-")!=0){
-                Log.i("solvedReduced:i(before)", String.valueOf(i));
-                if((op.equals("+") || op.equals("-")) && i>0){
-                    simplifyNumbersList(i,op);
-                    operators.remove(op);
-                    i--;
-                }
-                i++;
-                Log.i("solvedReduced:i(after)", String.valueOf(i));
-//
-//                for (int j:numbers) {
-//                    Log.i("solvedReduced:numbers", String.valueOf(j));
-//                }
+        for(int j=1; j<operators.size();j++){
+            if(operators.get(j).equals("+")||operators.get(j).equals("-")){
+                simplifyNumbersList(j,operators.get(j));
+                operators.set(j,null);
             }
-
         }
+
+        numbers.removeAll(Collections.singleton(null));
+        operators.removeAll(Collections.singleton(null));
 
         for(double n: numbers){
-            Log.d("numbers aft",String.valueOf(n));
+            Log.d("num aft minus plus",String.valueOf(n));
         }
         for(String s: operators){
-            Log.d("operators aft",s);
+            Log.d("ops aft minus plus",s);
         }
 
 
+//        while(operatorIterator.hasNext() && numbersIterator.hasNext()){
+//            String op = operatorIterator.next();
+//            if(operators.indexOf("*")!=0 || operators.indexOf("/")!=0){
+//                Log.i("solvedReduced:i(before)", String.valueOf(i));
+//                if(op.equals("*") || op.equals("/")){
+//                    simplifyNumbersList(i,op);
+//                    operators.remove(op);
+//                    i--;
+//                }
+//                i++;
+//                Log.i("solvedReduced:i(after)", String.valueOf(i));
+////
+////                for (int j:numbers) {
+////                    Log.i("solvedReduced:numbers", String.valueOf(j));
+////                }
+//            }
+//
+//        }
+
+
+
+
+//        i=0;
+//        while(operatorIterator.hasNext() && numbersIterator.hasNext() && operators.size()>1){
+//            String op = operatorIterator.next();
+//            double n = numbersIterator.next();
+//            if(operators.indexOf("+")!=0 || operators.indexOf("-")!=0){
+//                Log.i("solvedReduced:i(before)", String.valueOf(i));
+//                if((op.equals("+") || op.equals("-")) && i>0){
+//                    simplifyNumbersList(i,op);
+//                    operatorIterator.remove();
+//                    i--;
+//                }
+//                i++;
+//                Log.i("solvedReduced:i(after)", String.valueOf(i));
+////
+////                for (int j:numbers) {
+////                    Log.i("solvedReduced:numbers", String.valueOf(j));
+////                }
+//            }
+
+//        }
+
+//        for(double n: numbers){
+//            Log.d("numbers aft",String.valueOf(n));
+//        }
+//        for(String s: operators){
+//            Log.d("operators aft",s);
+//        }
 
 
         for (int j:numbers) {
@@ -141,22 +171,18 @@ public class Solver {
 
     private void simplifyNumbersList(int i,String operator) {
         int num = 0;
-        List<Integer> newNumList = new ArrayList<>(numbers);
         Log.i("simplifyNum:i(inside)", String.valueOf(i));
+        Log.i("simplifyNum:op(inside)", operator);
         switch(operator){
-            case "*": num = numbers.get(i) * numbers.get(i-1);break;
-            case "/": num = numbers.get(i) / numbers.get(i-1);break;
-            case "+": num = numbers.get(i) + numbers.get(i-1);break;
-            case "-": num = numbers.get(i) - numbers.get(i-1);break;
+            case "*": num = numbers.get(i-1) * numbers.get(i);break;
+            case "/": num = numbers.get(i-1) / numbers.get(i);break;
+            case "+": num = numbers.get(i-1) + numbers.get(i);break;
+            case "-": num = numbers.get(i-1) - numbers.get(i);break;
             default: break;
-
         }
-        newNumList.set(i-1,num);
-        newNumList.remove(i);
-        numbers = newNumList;
-        for(double n: numbers){
-            Log.d("numbers",String.valueOf(n));
-        }
+        Log.i("simplifyNum:num(inside)", String.valueOf(num));
+        numbers.set(i,num);
+        numbers.set(i-1,null);
 
     }
 
