@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     List<Integer> buttonList;
     StringBuilder sb = new StringBuilder();
     double memNum;
+    static int previousButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
             switch(btn.getId()){
                 case R.id.btn_equal:
                     lowerPanel.append("=");
-                    evaluate(sb.toString());
+                    if(!evaluate(sb.toString()))
+                        Toast.makeText(getApplicationContext(),"Invalid expression",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btn_mem :
                     memNum = Double.parseDouble(upperPanel.getText().toString());break;
@@ -66,27 +69,35 @@ public class MainActivity extends AppCompatActivity {
                     lowerPanel.setText(sb.toString());
                     break;
                 case R.id.btn_clear:
-                    lowerPanel.setText("");
+                    lowerPanel.setText("0");
                     break;
                 default: {sb.append(btn.getText());
                             lowerPanel.append(btn.getText());}
             }
+
+            previousButton = btn.getId();
         }
 
-        private double evaluate(String expression){
+        private boolean evaluate(String expression){
             double result =0;
             String reducedExpression;
             Solver solver = new Solver();
 
             String exp = lowerPanel.getText().toString();
             Log.i("Main:exp",exp);
-            upperPanel.setText(lowerPanel.getText().toString());
-            double answer = solver.evaluate(exp);
-            lowerPanel.setText(String.valueOf(answer));
 
+            char lastInput=exp.charAt(exp.length()-2);
+            if(Character.isDigit(lastInput)){
+                upperPanel.setText(lowerPanel.getText().toString());
+                double answer = solver.evaluate(exp);
+                lowerPanel.setText(String.valueOf(answer));
 
+                return true;
+            }
+            else{
+                return false;
+            }
 
-            return result;
         }
 
     }
