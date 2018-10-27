@@ -1,0 +1,12 @@
+Phase 1:
+
+Normal Calculator
+Landscape Scientific calculator
+
+
+Phase 2:
+Equation solver (root)
+Equation solver (simultaneous)
+matrix
+
+

@@ -44,15 +44,18 @@
                 android:text="M"
                 />
             <Button
-                android:id="@+id/btn_clear_mem"
+                android:id="@+id/btn_open_bracket"
                 style="@style/button_potrait"
-                android:text="M-"
+                android:text="("
+                android:enabled="false"
                 />
 
             <Button
-                android:id="@+id/btn_delete"
+                android:id="@+id/btn_close_bracket"
                 style="@style/button_potrait"
-                android:icon="@android:drawable/ic_menu_delete" />
+                android:text=")"
+                android:enabled="false"
+                />
         </TableRow>
         <TableRow
             android:id="@+id/ctl_row2"

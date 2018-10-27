@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     TextView upperPanel;
     TextView lowerPanel;
     List<Integer> buttonList;
+    List<Integer> actionButtonsList;
     StringBuilder sb = new StringBuilder();
     double memNum;
     static int previousButton;
@@ -27,12 +28,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         upperPanel = findViewById(R.id.txt_upper_panel);
+
         buttonList = new ArrayList<Integer>(Arrays.asList(
-                R.id.btn_clear,R.id.btn_mem,R.id.btn_clear_mem,R.id.btn_delete,
-                R.id.btn_plus,R.id.btn_1,R.id.btn_2,R.id.btn_3,
+                R.id.btn_clear,R.id.btn_mem,R.id.btn_open_bracket,R.id.btn_close_bracket,
+                R.id.btn_delete, R.id.btn_plus,
+                R.id.btn_1,R.id.btn_2,R.id.btn_3,
                 R.id.btn_minus,R.id.btn_4,R.id.btn_5,R.id.btn_6,
                 R.id.btn_multiply,R.id.btn_7,R.id.btn_8,R.id.btn_9,
                 R.id.btn_divide,R.id.btn_0,R.id.btn_decimal_point,R.id.btn_equal
+        ));
+
+        actionButtonsList = new ArrayList<Integer>(Arrays.asList(
+                R.id.btn_clear,R.id.btn_mem,R.id.btn_open_bracket,R.id.btn_close_bracket,R.id.btn_delete,
+                R.id.btn_plus, R.id.btn_minus, R.id.btn_multiply, R.id.btn_divide,R.id.btn_decimal_point
         ));
 
         lowerPanel = findViewById(R.id.txt_lower_panel);
@@ -43,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
             button.setOnClickListener(new ButtonHandler());
         }
 
-
         memNum = 0;
-
     }
 
     public class ButtonHandler implements View.OnClickListener{
@@ -55,30 +61,31 @@ public class MainActivity extends AppCompatActivity {
             sb = new StringBuilder();
             sb.append(lowerPanel.getText());
 
-            switch(btn.getId()){
-                case R.id.btn_equal:
-                    lowerPanel.append("=");
-                    if(!evaluate(sb.toString()))
-                        Toast.makeText(getApplicationContext(),"Invalid expression",Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.btn_mem :
-                    memNum = Double.parseDouble(upperPanel.getText().toString());break;
-                case R.id.btn_clear_mem :
-                    memNum = 0 ;break;
-                case R.id.btn_delete :
-                    sb.deleteCharAt(sb.length()-1) ;
-                    lowerPanel.setText(sb.toString());
-                    break;
-                case R.id.btn_clear:
-                    lowerPanel.setText("0");
-                    break;
-                default: {
-                    appendText(btn.getText().toString());
+            if(!actionButtonsList.contains(previousButton)){
+                switch(btn.getId()){
+                    case R.id.btn_equal:
+                        lowerPanel.append("=");
+                        if(!evaluate(sb.toString()))
+                            Toast.makeText(getApplicationContext(),"Invalid expression",Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.btn_mem :
+                        memNum = Double.parseDouble(upperPanel.getText().toString());break;
+                    case R.id.btn_open_bracket:
+                        memNum = 0 ;break;
+                    case R.id.btn_delete :
+                        sb.deleteCharAt(sb.length()-1) ;
+                        lowerPanel.setText(sb.toString());
+                        break;
+                    case R.id.btn_clear:
+                        lowerPanel.setText("0");
+                        break;
+                    default: {
+                        appendText(btn.getText().toString());
 //                    sb.append(btn.getText());
 //                    lowerPanel.append(btn.getText());
+                    }
                 }
             }
-
             previousButton = btn.getId();
         }
 
@@ -101,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
             else{
                 return false;
             }
-
         }
 
         private void appendText(String input){
