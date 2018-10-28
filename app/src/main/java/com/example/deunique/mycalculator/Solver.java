@@ -10,7 +10,7 @@ import java.util.ListIterator;
 
 public class Solver {
 
-    List<Integer> numbers = new ArrayList<>();
+    List<Double> numbers = new ArrayList<>();
     List<String> operators = new ArrayList<>();
 
     public double evaluate(String expression){
@@ -42,7 +42,7 @@ public class Solver {
             }
             else{
                 if(!num.toString().equals(""))
-                    numbers.add(Integer.parseInt(num.toString()));
+                    numbers.add(Double.parseDouble(num.toString()));
                 num =  new StringBuilder();
                 if(!nextChar.equals("="))
                     operators.add(nextChar);
@@ -96,9 +96,7 @@ public class Solver {
             Log.d("ops aft minus plus",s);
         }
 
-
-
-        for (int j:numbers) {
+        for (double j:numbers) {
             Log.i("solvedReduced:numbers", String.valueOf(j));
         }
 
@@ -106,7 +104,7 @@ public class Solver {
     }
 
     private void simplifyNumbersList(int i,String operator) {
-        int num = 0;
+        double num = 0;
         Log.i("simplifyNum:i(inside)", String.valueOf(i));
         Log.i("simplifyNum:op(inside)", operator);
         switch(operator){
