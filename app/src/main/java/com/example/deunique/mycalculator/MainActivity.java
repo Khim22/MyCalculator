@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         ));
 
         lowerPanel = findViewById(R.id.txt_lower_panel);
-        lowerPanel.setText("0");
         
         for(int i = 0; i<buttonList.size();i++ ){
             Button button = findViewById(buttonList.get(i));
@@ -72,11 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.btn_clear:
                     lowerPanel.setText("0");
                     break;
-                default: {
-                    appendText(btn.getText().toString());
-//                    sb.append(btn.getText());
-//                    lowerPanel.append(btn.getText());
-                }
+                default: {sb.append(btn.getText());
+                            lowerPanel.append(btn.getText());}
             }
 
             previousButton = btn.getId();
@@ -102,15 +98,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
 
-        }
-
-        private void appendText(String input){
-            Log.d("panel",String.valueOf(lowerPanel.getText()));
-            if(lowerPanel.getText().toString().equals("0"))
-                lowerPanel.setText("");
-            sb.append(input);
-            Log.d("sb",sb.toString());
-            lowerPanel.append(input);
         }
 
     }
