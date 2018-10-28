@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     TextView upperPanel;
     TextView lowerPanel;
     List<Integer> buttonList;
+    String[] operators;
     StringBuilder sb = new StringBuilder();
     double memNum;
     static int previousButton;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
                 R.id.btn_divide,R.id.btn_0,R.id.btn_decimal_point,R.id.btn_equal
         ));
 
+        operators = new String[]{"+","-","×","÷"};
+
         lowerPanel = findViewById(R.id.txt_lower_panel);
         
         for(int i = 0; i<buttonList.size();i++ ){
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         memNum = 0;
+        sb = new StringBuilder();
 
     }
 
@@ -51,14 +55,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Button btn = (Button)v;
-            sb = new StringBuilder();
-            sb.append(lowerPanel.getText());
+
+            Log.d("sb after click",sb.toString());
 
             switch(btn.getId()){
                 case R.id.btn_equal:
-                    lowerPanel.append("=");
-                    if(!evaluate(sb.toString()))
+                    sb.append("=");
+                    if(evaluate(sb.toString())){
+                        sb = new StringBuilder();
+                    }
+                    else{
                         Toast.makeText(getApplicationContext(),"Invalid expression",Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 case R.id.btn_mem :
                     memNum = Double.parseDouble(upperPanel.getText().toString());break;
@@ -70,20 +78,31 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_clear:
                     lowerPanel.setText("0");
+                    sb = new StringBuilder();
                     break;
-                default: {sb.append(btn.getText());
-                            lowerPanel.append(btn.getText());}
+                default: {
+                    sb.append(btn.getText());
+                    if(IsPreviousButtonOperator() && IsCurrentButtonOperator()){
+                        sb.setLength(sb.length() - 1);
+                    }
+                    else if(lowerPanel.getText().toString().equals("0")){
+                        lowerPanel.setText("");
+                        lowerPanel.append(btn.getText());
+                    }
+                    else{
+                        lowerPanel.append(btn.getText());
+                    }
+                }
             }
 
             previousButton = btn.getId();
         }
 
-        private boolean evaluate(String expression){
+        private boolean evaluate(String exp){
             double result =0;
             String reducedExpression;
             Solver solver = new Solver();
 
-            String exp = lowerPanel.getText().toString();
             Log.i("Main:exp",exp);
 
             char lastInput=exp.charAt(exp.length()-2);
@@ -99,6 +118,21 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+
+        private boolean IsPreviousButtonOperator(){
+            String lastInput= sb.length()>1? sb.substring(sb.length()-2, sb.length()-1): "";
+            Log.d("lastInput",lastInput);
+            Log.d("lastInputCheck",String.valueOf(Arrays.asList(operators).contains(lastInput)));
+            return Arrays.asList(operators).contains(lastInput);
+        }
+
+        private boolean IsCurrentButtonOperator(){
+            String currentInput= sb.substring(sb.length()-1,sb.length());
+            Log.d("currentInput",currentInput);
+            Log.d("currentInputCheck",String.valueOf(Arrays.asList(operators).contains(currentInput)));
+            return Arrays.asList(operators).contains(currentInput);
+        }
+
 
     }
 }
