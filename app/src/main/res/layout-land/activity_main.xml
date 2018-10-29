@@ -26,7 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/output_view">
-
         <TableRow
             android:id="@+id/ctl_row1"
             android:layout_height="0dp"
@@ -42,13 +41,13 @@
                 android:text="M"
                 />
             <Button
-                android:id="@+id/btn_clear_mem"
+                android:id="@+id/btn_open_bracket"
                 style="@style/button_potrait"
                 android:text="M-"
                 />
 
             <Button
-                android:id="@+id/btn_delete"
+                android:id="@+id/btn_close_bracket"
                 style="@style/button_potrait"
                 android:icon="@android:drawable/ic_menu_delete" />
             <Button
@@ -62,15 +61,15 @@
                 android:text="M"
                 />
             <Button
-                android:id="@+id/btn_clear_mem"
+                android:id="@+id/btn_open_bracket"
                 style="@style/button_potrait"
-                android:text="M-"
+                android:text="("
                 />
 
             <Button
-                android:id="@+id/btn_delete"
+                android:id="@+id/btn_close_bracket"
                 style="@style/button_potrait"
-                android:icon="@android:drawable/ic_menu_delete" />
+                android:text=")" />
         </TableRow>
         <TableRow
             android:id="@+id/ctl_row2"

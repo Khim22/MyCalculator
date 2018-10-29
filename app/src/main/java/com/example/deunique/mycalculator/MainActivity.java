@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         upperPanel = findViewById(R.id.txt_upper_panel);
         buttonList = new ArrayList<Integer>(Arrays.asList(
-                R.id.btn_clear,R.id.btn_mem,R.id.btn_clear_mem,R.id.btn_delete,
+                R.id.btn_clear,R.id.btn_mem,R.id.btn_open_bracket,R.id.btn_close_bracket,
                 R.id.btn_plus,R.id.btn_1,R.id.btn_2,R.id.btn_3,
                 R.id.btn_minus,R.id.btn_4,R.id.btn_5,R.id.btn_6,
                 R.id.btn_multiply,R.id.btn_7,R.id.btn_8,R.id.btn_9,
@@ -70,12 +70,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_mem :
                     memNum = Double.parseDouble(upperPanel.getText().toString());break;
-                case R.id.btn_clear_mem :
-                    memNum = 0 ;break;
-                case R.id.btn_delete :
-                    sb.deleteCharAt(sb.length()-1) ;
-                    lowerPanel.setText(sb.toString());
-                    break;
                 case R.id.btn_clear:
                     lowerPanel.setText("0");
                     sb = new StringBuilder();
