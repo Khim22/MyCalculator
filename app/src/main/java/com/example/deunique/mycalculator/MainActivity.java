@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
             button.setOnClickListener(new ButtonHandler());
         }
 
-
         memNum = 0;
         sb = new StringBuilder();
 
@@ -55,9 +54,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Button btn = (Button)v;
-
             Log.d("sb after click",sb.toString());
-
             switch(btn.getId()){
                 case R.id.btn_equal:
                     sb.append("=");
@@ -115,15 +112,11 @@ public class MainActivity extends AppCompatActivity {
 
         private boolean IsPreviousButtonOperator(){
             String lastInput= sb.length()>1? sb.substring(sb.length()-2, sb.length()-1): "";
-            Log.d("lastInput",lastInput);
-            Log.d("lastInputCheck",String.valueOf(Arrays.asList(operators).contains(lastInput)));
             return Arrays.asList(operators).contains(lastInput);
         }
 
         private boolean IsCurrentButtonOperator(){
             String currentInput= sb.substring(sb.length()-1,sb.length());
-            Log.d("currentInput",currentInput);
-            Log.d("currentInputCheck",String.valueOf(Arrays.asList(operators).contains(currentInput)));
             return Arrays.asList(operators).contains(currentInput);
         }
 

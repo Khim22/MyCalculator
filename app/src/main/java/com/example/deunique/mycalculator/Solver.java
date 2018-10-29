@@ -4,9 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class Solver {
 
@@ -14,31 +12,40 @@ public class Solver {
     List<String> operators = new ArrayList<>();
 
     public double evaluate(String expression){
-        String reducedExp = parseExpression(expression);
+        //check for brackets
+        Log.i("expContains",String.valueOf(expression.contains("(")));
+        if(expression.contains("(")|| expression.contains(")")){
+            //TODO: TO clean up
+            String withinBracket = setNumbersAndOpsList(
+                expression.substring(expression.indexOf("(")+1,expression.indexOf(")"))+"="
+            );
+            //TODO: TO clean up
+            withinBracket+="=";
+            Log.d("withinBrac",withinBracket);
+            double answerWithinBrackets = solveReducedExpression(withinBracket);
+            Log.d("ansWithinBrac",String.valueOf(answerWithinBrackets));
+            //TODO: TO clean up
+            //String beforeBracket = expression.substring(0,expression.indexOf("("));
+            String afterBracket = expression.substring(expression.indexOf(")")+1,expression.length());
+            expression = String.valueOf(answerWithinBrackets)+ "*" + afterBracket;
+        }
+        String reducedExp = setNumbersAndOpsList(expression);
         Log.i("Solver:reducedExp", reducedExp);
 
         return solveReducedExpression(reducedExp);
     }
 
-    private String parseExpression(String expression){
-        String reducedExpression;
-        reducedExpression= expression.replace('×','*');
-        reducedExpression = reducedExpression.replace('÷','/');
-
-
-        String firstChar = reducedExpression.substring(0,1);
-        if(firstChar.matches("\\d")){
-            reducedExpression = "+"+ reducedExpression ;
-        }
-
-        Log.i("parseExp:reducedExp", reducedExpression);
-
+    private String setNumbersAndOpsList(String expression){
+        String reducedExpression = ExpressionParser.parseExpression(expression);
+        Log.i("reducedExp",reducedExpression);
         StringBuilder num = new StringBuilder();
         for(int i=0; i< reducedExpression.length();i++){
             String nextChar = reducedExpression.substring(i,i+1);
-            Log.i("parseExp:nextChar", nextChar);
+            Log.i("i",String.valueOf(i));
+            Log.i("nextChar",nextChar);
             if(nextChar.matches(".*\\d+.*")){
                 num.append(nextChar);
+                Log.i("numInMatch",num.toString());
             }
             else{
                 if(!num.toString().equals(""))
@@ -50,12 +57,11 @@ public class Solver {
         }
 
         for(double n: numbers){
-            Log.d("numbers b4",String.valueOf(n));
+            Log.i("numbers b4",String.valueOf(n));
         }
         for(String s: operators){
-            Log.d("operators b4",s);
+            Log.i("operators b4",s);
         }
-
 
         return reducedExpression;
     }
