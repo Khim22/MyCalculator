@@ -8,14 +8,24 @@ import java.util.List;
 
 public class Solver {
 
-    List<Double> numbers = new ArrayList<>();
-    List<String> operators = new ArrayList<>();
+    private List<Double> numbers;
+    private List<String> operators;
 
     public double evaluate(String expression){
         //check for brackets
-        Log.i("expContains",String.valueOf(expression.contains("(")));
+
         if(expression.contains("(")|| expression.contains(")")){
             //TODO: TO clean up
+            int positionOfOpenBracket = expression.indexOf("(");
+            Log.i("openBrack",String.valueOf(positionOfOpenBracket));
+            int positionOfCloseBracket = expression.indexOf(")");
+            Log.i("closeBrack",String.valueOf(positionOfCloseBracket));
+            Log.i("expLength",String.valueOf(expression.length()));
+            String beforeBracket = expression.substring(0,expression.indexOf("("));
+            Log.i("b4Brack",beforeBracket);
+            String afterBracket = expression.substring(expression.indexOf(")")+1,expression.length());
+            Log.i("aftBrack",afterBracket);
+
             String withinBracket = setNumbersAndOpsList(
                 expression.substring(expression.indexOf("(")+1,expression.indexOf(")"))+"="
             );
@@ -25,9 +35,17 @@ public class Solver {
             double answerWithinBrackets = solveReducedExpression(withinBracket);
             Log.d("ansWithinBrac",String.valueOf(answerWithinBrackets));
             //TODO: TO clean up
-            //String beforeBracket = expression.substring(0,expression.indexOf("("));
-            String afterBracket = expression.substring(expression.indexOf(")")+1,expression.length());
-            expression = String.valueOf(answerWithinBrackets)+ "*" + afterBracket;
+
+            if(positionOfOpenBracket==0){
+                expression = "+" + String.valueOf(answerWithinBrackets)+ "*" + afterBracket + "=";
+                Log.i("openAtStart",expression);
+            }
+            else if(positionOfCloseBracket==expression.length()-2){
+                expression =  "+" + beforeBracket +"*"+ String.valueOf(answerWithinBrackets)+ "=";
+                Log.i("closeAtEnd",expression);
+            }
+
+            Log.i("afterBracket",expression);
         }
         String reducedExp = setNumbersAndOpsList(expression);
         Log.i("Solver:reducedExp", reducedExp);
@@ -37,17 +55,20 @@ public class Solver {
 
     private String setNumbersAndOpsList(String expression){
         String reducedExpression = ExpressionParser.parseExpression(expression);
+        numbers = new ArrayList<>();
+        operators = new ArrayList<>();
         Log.i("reducedExp",reducedExpression);
         StringBuilder num = new StringBuilder();
         for(int i=0; i< reducedExpression.length();i++){
             String nextChar = reducedExpression.substring(i,i+1);
             Log.i("i",String.valueOf(i));
             Log.i("nextChar",nextChar);
-            if(nextChar.matches(".*\\d+.*")){
+            if(nextChar.matches(".*\\d+.*")||nextChar.matches("\\.")){
                 num.append(nextChar);
                 Log.i("numInMatch",num.toString());
             }
             else{
+                Log.i("numNotMatch",num.toString());
                 if(!num.toString().equals(""))
                     numbers.add(Double.parseDouble(num.toString()));
                 num =  new StringBuilder();

@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i("Main:exp",exp);
 
             char lastInput=exp.charAt(exp.length()-2);
-            if(Character.isDigit(lastInput)){
+            if(Character.isDigit(lastInput)||lastInput==')'){
                 upperPanel.setText(lowerPanel.getText().toString());
                 double answer = solver.evaluate(exp);
                 lowerPanel.setText(String.valueOf(answer));
