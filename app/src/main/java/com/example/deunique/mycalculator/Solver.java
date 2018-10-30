@@ -3,13 +3,16 @@ package com.example.deunique.mycalculator;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class Solver {
 
-    private List<Double> numbers;
-    private List<String> operators;
+    private List<Double> numbersForCalc;
+    private List<String> operatorsForCalc;
+
+    private List<String> operators =  Arrays.asList("+", "-", "×","÷");
 
     public double evaluate(String expression){
         //check for brackets
@@ -41,8 +44,17 @@ public class Solver {
                 Log.i("openAtStart",expression);
             }
             else if(positionOfCloseBracket==expression.length()-2){
-                expression =  "+" + beforeBracket +"*"+ String.valueOf(answerWithinBrackets)+ "=";
+                if(operators.contains(beforeBracket.substring(beforeBracket.length()-1))){
+                    expression =  "+" + beforeBracket + String.valueOf(answerWithinBrackets)+ "=";
+                }
+                else{
+                    expression =  "+" + beforeBracket +"*"+ String.valueOf(answerWithinBrackets)+ "=";
+                }
                 Log.i("closeAtEnd",expression);
+            }
+            else{
+                expression =  "+" + beforeBracket +"*"+ String.valueOf(answerWithinBrackets)+ afterBracket + "=";
+                Log.i("BrackAtMid",expression);
             }
 
             Log.i("afterBracket",expression);
@@ -55,8 +67,8 @@ public class Solver {
 
     private String setNumbersAndOpsList(String expression){
         String reducedExpression = ExpressionParser.parseExpression(expression);
-        numbers = new ArrayList<>();
-        operators = new ArrayList<>();
+        numbersForCalc = new ArrayList<>();
+        operatorsForCalc = new ArrayList<>();
         Log.i("reducedExp",reducedExpression);
         StringBuilder num = new StringBuilder();
         for(int i=0; i< reducedExpression.length();i++){
@@ -70,17 +82,17 @@ public class Solver {
             else{
                 Log.i("numNotMatch",num.toString());
                 if(!num.toString().equals(""))
-                    numbers.add(Double.parseDouble(num.toString()));
+                    numbersForCalc.add(Double.parseDouble(num.toString()));
                 num =  new StringBuilder();
                 if(!nextChar.equals("="))
-                    operators.add(nextChar);
+                    operatorsForCalc.add(nextChar);
             }
         }
 
-        for(double n: numbers){
+        for(double n: numbersForCalc){
             Log.i("numbers b4",String.valueOf(n));
         }
-        for(String s: operators){
+        for(String s: operatorsForCalc){
             Log.i("operators b4",s);
         }
 
@@ -89,45 +101,45 @@ public class Solver {
 
     private double solveReducedExpression(String reduced){
 
-        for(int j=1; j<operators.size();j++){
-            if(operators.get(j).equals("*")||operators.get(j).equals("/")){
-                simplifyNumbersList(j,operators.get(j));
-                operators.set(j,null);
+        for(int j=1; j<operatorsForCalc.size();j++){
+            if(operatorsForCalc.get(j).equals("*")||operatorsForCalc.get(j).equals("/")){
+                simplifyNumbersList(j,operatorsForCalc.get(j));
+                operatorsForCalc.set(j,null);
             }
         }
 
-        numbers.removeAll(Collections.singleton(null));
-        operators.removeAll(Collections.singleton(null));
+        numbersForCalc.removeAll(Collections.singleton(null));
+        operatorsForCalc.removeAll(Collections.singleton(null));
 
-        for(double n: numbers){
+        for(double n: numbersForCalc){
             Log.d("num aft times divide",String.valueOf(n));
         }
-        for(String s: operators){
+        for(String s: operatorsForCalc){
             Log.d("ops aft times divide",s);
         }
 
-        for(int j=1; j<operators.size();j++){
-            if(operators.get(j).equals("+")||operators.get(j).equals("-")){
-                simplifyNumbersList(j,operators.get(j));
-                operators.set(j,null);
+        for(int j=1; j<operatorsForCalc.size();j++){
+            if(operatorsForCalc.get(j).equals("+")||operatorsForCalc.get(j).equals("-")){
+                simplifyNumbersList(j,operatorsForCalc.get(j));
+                operatorsForCalc.set(j,null);
             }
         }
 
-        numbers.removeAll(Collections.singleton(null));
-        operators.removeAll(Collections.singleton(null));
+        numbersForCalc.removeAll(Collections.singleton(null));
+        operatorsForCalc.removeAll(Collections.singleton(null));
 
-        for(double n: numbers){
+        for(double n: numbersForCalc){
             Log.d("num aft minus plus",String.valueOf(n));
         }
-        for(String s: operators){
+        for(String s: operatorsForCalc){
             Log.d("ops aft minus plus",s);
         }
 
-        for (double j:numbers) {
+        for (double j:numbersForCalc) {
             Log.i("solvedReduced:numbers", String.valueOf(j));
         }
 
-        return numbers.get(0);
+        return numbersForCalc.get(0);
     }
 
     private void simplifyNumbersList(int i,String operator) {
@@ -135,15 +147,15 @@ public class Solver {
         Log.i("simplifyNum:i(inside)", String.valueOf(i));
         Log.i("simplifyNum:op(inside)", operator);
         switch(operator){
-            case "*": num = numbers.get(i-1) * numbers.get(i);break;
-            case "/": num = numbers.get(i-1) / numbers.get(i);break;
-            case "+": num = numbers.get(i-1) + numbers.get(i);break;
-            case "-": num = numbers.get(i-1) - numbers.get(i);break;
+            case "*": num = numbersForCalc.get(i-1) * numbersForCalc.get(i);break;
+            case "/": num = numbersForCalc.get(i-1) / numbersForCalc.get(i);break;
+            case "+": num = numbersForCalc.get(i-1) + numbersForCalc.get(i);break;
+            case "-": num = numbersForCalc.get(i-1) - numbersForCalc.get(i);break;
             default: break;
         }
         Log.i("simplifyNum:num(inside)", String.valueOf(num));
-        numbers.set(i,num);
-        numbers.set(i-1,null);
+        numbersForCalc.set(i,num);
+        numbersForCalc.set(i-1,null);
 
     }
 
