@@ -40,7 +40,13 @@ public class Solver {
             //TODO: TO clean up
 
             if(positionOfOpenBracket==0){
-                expression = "+" + String.valueOf(answerWithinBrackets)+ "*" + afterBracket + "=";
+                if(operators.contains(afterBracket.substring(0,1))){
+                    expression = "+" + answerWithinBrackets + afterBracket + "=";
+                }
+                else{
+                    expression = "+" + String.valueOf(answerWithinBrackets)+ "*" + afterBracket + "=";
+                }
+
                 Log.i("openAtStart",expression);
             }
             else if(positionOfCloseBracket==expression.length()-2){
@@ -53,7 +59,14 @@ public class Solver {
                 Log.i("closeAtEnd",expression);
             }
             else{
-                expression =  "+" + beforeBracket +"*"+ String.valueOf(answerWithinBrackets)+ afterBracket + "=";
+                if(!operators.contains(afterBracket.substring(0,1))){
+                    afterBracket = "*" + afterBracket;
+                }
+                if(!operators.contains(beforeBracket.substring(beforeBracket.length()-1))){
+                    beforeBracket+= "*";
+                }
+
+                expression =  "+" + beforeBracket + String.valueOf(answerWithinBrackets)+ afterBracket + "=";
                 Log.i("BrackAtMid",expression);
             }
 
@@ -97,6 +110,19 @@ public class Solver {
         }
 
         return reducedExpression;
+    }
+
+    private boolean doesContainMultipleBrackets(String expression){
+        //count number of "("
+        return false;
+    }
+
+    private String reduceMutipleBrackets(String expression){
+        //count first instance of ")"
+        //backward determine "(" --- to get the innermost () expression
+        //cut out the string inside innermost () expression
+
+        return "";
     }
 
     private double solveReducedExpression(String reduced){
