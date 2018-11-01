@@ -113,16 +113,29 @@ public class Solver {
     }
 
     private boolean doesContainMultipleBrackets(String expression){
-        //count number of "("
-        return false;
+        int countOfOpenBrackets = expression.length() - expression.replace("(", "").length();
+        return countOfOpenBrackets>0;
     }
 
     private String reduceMutipleBrackets(String expression){
         //count first instance of ")"
         //backward determine "(" --- to get the innermost () expression
         //cut out the string inside innermost () expression
+        int indexOfFirstCloseBracket = expression.indexOf(")");
+        int indexOfAssociatedOpenBracket = -1;
+        String innerBracketExpression ="";
+        for(int i= indexOfFirstCloseBracket; i>0;i--){
+            if(expression.charAt(i)== '('){
+                indexOfAssociatedOpenBracket = i;
+                break;
+            }
+        }
 
-        return "";
+        if(indexOfAssociatedOpenBracket>0)
+            innerBracketExpression = expression.substring(indexOfAssociatedOpenBracket+1,indexOfFirstCloseBracket);
+
+
+        return innerBracketExpression;
     }
 
     private double solveReducedExpression(String reduced){
@@ -184,6 +197,18 @@ public class Solver {
         numbersForCalc.set(i-1,null);
 
     }
+
+    //TODO; SCientific calculator buttons
+    //sin, cos, tan - inverse
+    //ln, log - e^x , 10^x
+    // sto - rcl
+    //x^2, x^3 - sqrt,cubert
+    // x^y - yroot
+    //x^-1 - x!
+    //hyp - mode
+
+
+
 
 
 }
