@@ -14,63 +14,25 @@ public class Solver {
 
     private List<String> operators =  Arrays.asList("+", "-", "×","÷");
 
+    private ExpressionParser parser = new ExpressionParser();
+
     public double evaluate(String expression){
         //check for brackets
 
-        if(expression.contains("(")|| expression.contains(")")){
+        while(expression.contains("(")|| expression.contains(")")){
             //TODO: TO clean up
-            int positionOfOpenBracket = expression.indexOf("(");
-            Log.i("openBrack",String.valueOf(positionOfOpenBracket));
-            int positionOfCloseBracket = expression.indexOf(")");
-            Log.i("closeBrack",String.valueOf(positionOfCloseBracket));
-            Log.i("expLength",String.valueOf(expression.length()));
-            String beforeBracket = expression.substring(0,expression.indexOf("("));
-            Log.i("b4Brack",beforeBracket);
-            String afterBracket = expression.substring(expression.indexOf(")")+1,expression.length());
-            Log.i("aftBrack",afterBracket);
 
             String withinBracket = setNumbersAndOpsList(
-                expression.substring(expression.indexOf("(")+1,expression.indexOf(")"))+"="
+                    parser.getExpressionWithinBracket(expression)
             );
             //TODO: TO clean up
-            withinBracket+="=";
-            Log.d("withinBrac",withinBracket);
+            Log.i("withinBrac",withinBracket);
+
             double answerWithinBrackets = solveReducedExpression(withinBracket);
-            Log.d("ansWithinBrac",String.valueOf(answerWithinBrackets));
+            Log.i("ansWithinBrac",String.valueOf(answerWithinBrackets));
             //TODO: TO clean up
+            expression = parser.setExpressionAfterEvaluatingExpressionInBracket(String.valueOf(answerWithinBrackets),expression);
 
-            if(positionOfOpenBracket==0){
-                if(operators.contains(afterBracket.substring(0,1))){
-                    expression = "+" + answerWithinBrackets + afterBracket + "=";
-                }
-                else{
-                    expression = "+" + String.valueOf(answerWithinBrackets)+ "*" + afterBracket + "=";
-                }
-
-                Log.i("openAtStart",expression);
-            }
-            else if(positionOfCloseBracket==expression.length()-2){
-                if(operators.contains(beforeBracket.substring(beforeBracket.length()-1))){
-                    expression =  "+" + beforeBracket + String.valueOf(answerWithinBrackets)+ "=";
-                }
-                else{
-                    expression =  "+" + beforeBracket +"*"+ String.valueOf(answerWithinBrackets)+ "=";
-                }
-                Log.i("closeAtEnd",expression);
-            }
-            else{
-                if(!operators.contains(afterBracket.substring(0,1))){
-                    afterBracket = "*" + afterBracket;
-                }
-                if(!operators.contains(beforeBracket.substring(beforeBracket.length()-1))){
-                    beforeBracket+= "*";
-                }
-
-                expression =  "+" + beforeBracket + String.valueOf(answerWithinBrackets)+ afterBracket + "=";
-                Log.i("BrackAtMid",expression);
-            }
-
-            Log.i("afterBracket",expression);
         }
         String reducedExp = setNumbersAndOpsList(expression);
         Log.i("Solver:reducedExp", reducedExp);
@@ -112,12 +74,12 @@ public class Solver {
         return reducedExpression;
     }
 
-    private boolean doesContainMultipleBrackets(String expression){
+    private boolean doesContainNestedBrackets(String expression){
         int countOfOpenBrackets = expression.length() - expression.replace("(", "").length();
         return countOfOpenBrackets>0;
     }
 
-    private String reduceMutipleBrackets(String expression){
+    private String reduceNestedBrackets(String expression){
         //count first instance of ")"
         //backward determine "(" --- to get the innermost () expression
         //cut out the string inside innermost () expression
