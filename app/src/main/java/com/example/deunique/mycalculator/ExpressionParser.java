@@ -8,9 +8,55 @@ import java.util.List;
 public class ExpressionParser {
     private int positionOfCloseBracket;
     private int positionOfOpenBracket;
-    String beforeBracket;
-    String afterBracket;
-    private List<String> operators =  Arrays.asList("+", "-", "×","÷");
+    static String beforeBracket;
+    static String afterBracket;
+    private List<String> operators =  Arrays.asList("+", "-", "*","/");
+
+
+    private String getExpressionAfterBracket(String fullExpression){
+        return fullExpression.substring(fullExpression.indexOf(")")+1,fullExpression.length());
+    }
+
+    private String getExpressionBeforeBracket(String fullExpression){
+        return fullExpression.substring(0,fullExpression.indexOf("("));
+    }
+
+    private boolean isFirstCharOfAfterBracketExpressionOperator(String afterBracket){
+        return afterBracket!=null && !afterBracket.equals("") && operators.contains(afterBracket.substring(0,1));
+    }
+
+    private boolean isLastCharOfBeforeBracketExpressionOperator(String beforeBracket){
+        if(beforeBracket!=null && beforeBracket.length()>1)
+            Log.i("b4BrackLastcharT/F",String.valueOf(operators.contains(beforeBracket.substring(beforeBracket.length()-1))));
+        return beforeBracket!=null && !beforeBracket.equals("") && operators.contains(beforeBracket.substring(beforeBracket.length()-1));
+    }
+
+    private boolean isFirstCharOfBeforeBracketPositiveSign(String beforeBracket){
+        return beforeBracket!=null && !beforeBracket.equals("") && beforeBracket.charAt(0)=='+';
+    }
+
+    private void ensureBeforeAndAfterBracketExpressionContainsOperator(){
+        if(!isFirstCharOfAfterBracketExpressionOperator(afterBracket) && !afterBracket.equals("")){
+            afterBracket = "*" + afterBracket;
+        }
+        if(!isLastCharOfBeforeBracketExpressionOperator(beforeBracket) && !beforeBracket.equals("")){
+            beforeBracket+= "*";
+        }
+        if(isFirstCharOfBeforeBracketPositiveSign(beforeBracket))
+            beforeBracket = beforeBracket.substring(1,beforeBracket.length());
+    }
+
+    //Public methods
+
+    public String removeEqualSignAtEnd(String expression){
+        return expression.charAt(expression.length()-1)=='='?
+                    expression.substring(0,expression.length()-1):
+                    expression;
+    }
+
+    public boolean isExpressionContainingBrackets(String expression){
+        return expression.contains("(")|| expression.contains(")");
+    }
 
     public static String parseExpression(String expression){
         String reducedExpression;
@@ -27,23 +73,10 @@ public class ExpressionParser {
         return reducedExpression;
     }
 
-    public String getExpressionAfterBracket(String fullExpression){
-        return fullExpression.substring(fullExpression.indexOf(")")+1,fullExpression.length());
-    }
-
-    public String getExpressionBeforeBracket(String fullExpression){
-        return fullExpression.substring(0,fullExpression.indexOf("("));
-    }
-
-    public void appendMultiplySymbolIfDoesNotExist(){
-        if(!operators.contains(afterBracket.substring(0,1))){
-            afterBracket = "*" + afterBracket;
-        }
-    }
-
     public String getExpressionWithinBracket(String expression){
         positionOfCloseBracket = expression.indexOf(")");
         positionOfOpenBracket = expression.indexOf("(");
+
         Log.i("expLength",String.valueOf(expression.length()));
         Log.i("openBrack",String.valueOf(positionOfOpenBracket));
         Log.i("closeBrack",String.valueOf(positionOfCloseBracket));
@@ -55,38 +88,60 @@ public class ExpressionParser {
 
         String newExpression = expression.substring(expression.indexOf("(")+1,expression.indexOf(")"));
         Log.i("newExpressionInBracket",newExpression);
-        return newExpression.concat("=");
+        return newExpression;
     }
 
     public String setExpressionAfterEvaluatingExpressionInBracket(String answerWithinBrackets, String expression){
 
         String newExpression;
-        if(positionOfOpenBracket==0){
-            if(!operators.contains(afterBracket.substring(0,1))){
-                afterBracket = "*" + afterBracket;
-            }
-            newExpression = "+" + answerWithinBrackets + afterBracket + "=";
-            Log.i("openAtStart",newExpression);
-        }
-        else if(positionOfCloseBracket==expression.length()-2){
-            if(!operators.contains(beforeBracket.substring(beforeBracket.length()-1))){
-                beforeBracket+= "*";
-            }
-            newExpression =  "+" + beforeBracket + String.valueOf(answerWithinBrackets)+ "=";
-            Log.i("closeAtEnd",newExpression);
-        }
-        else{
-            if(!operators.contains(afterBracket.substring(0,1))){
-                afterBracket = "*" + afterBracket;
-            }
-            if(!operators.contains(beforeBracket.substring(beforeBracket.length()-1))){
-                beforeBracket+= "*";
-            }
-            newExpression =  "+" + beforeBracket + String.valueOf(answerWithinBrackets)+ afterBracket + "=";
-            Log.i("BrackAtMid",newExpression);
-        }
+        Log.i("before ensure b4Brac",beforeBracket);
+        Log.i("before ensure aftBrac",afterBracket);
+        ensureBeforeAndAfterBracketExpressionContainsOperator();
+        Log.i("aft ensure b4Brac",beforeBracket);
+        Log.i("aft ensure aftBrac",afterBracket);
+
+        newExpression =  "+" + beforeBracket + String.valueOf(answerWithinBrackets)+ afterBracket;
+        Log.i("BrackAtMid",newExpression);
 
         Log.i("afterBracket",newExpression);
         return newExpression;
+    }
+
+    public boolean IsContainingNestedBrackets(String expression){
+        boolean isContain = false;
+        for(int i =0,countOfOpenBracket=0,countOfCloseBracket=0;i<expression.length();i++){
+            if(expression.charAt(i)=='(')
+                countOfOpenBracket++;
+            if(expression.charAt(i)==')')
+                countOfCloseBracket++;
+            if(countOfOpenBracket>countOfCloseBracket+2){
+                isContain = true;
+                break;
+            }
+        }
+        return isContain;
+    }
+
+
+    private String getExpressionInNestedBrackets(String expression){
+        //count first instance of ")"
+        //backward determine "(" --- to get the innermost () expression
+        //cut out the string inside innermost () expression
+        int indexOfFirstCloseBracket = expression.indexOf(")");
+        int indexOfAssociatedOpenBracket = -1;
+        String innerBracketExpression ="";
+        for(int i= indexOfFirstCloseBracket; i>0;i--){
+            if(expression.charAt(i)== '('){
+                indexOfAssociatedOpenBracket = i;
+                break;
+            }
+        }
+
+        if(indexOfAssociatedOpenBracket>0){}
+            innerBracketExpression = expression.substring(indexOfAssociatedOpenBracket+1,indexOfFirstCloseBracket);
+        beforeBracket = expression.substring(0,indexOfAssociatedOpenBracket);
+        afterBracket = expression.substring(indexOfFirstCloseBracket+1);
+
+        return innerBracketExpression;
     }
 }

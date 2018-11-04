@@ -17,11 +17,13 @@ public class Solver {
     private ExpressionParser parser = new ExpressionParser();
 
     public double evaluate(String expression){
-        //check for brackets
-
-        while(expression.contains("(")|| expression.contains(")")){
+        expression = parser.removeEqualSignAtEnd(expression);
+        while(parser.isExpressionContainingBrackets(expression)){
             //TODO: TO clean up
 
+            if(parser.IsContainingNestedBrackets(expression)){
+
+            }
             String withinBracket = setNumbersAndOpsList(
                     parser.getExpressionWithinBracket(expression)
             );
@@ -40,15 +42,61 @@ public class Solver {
         return solveReducedExpression(reducedExp);
     }
 
+    private double solveReducedExpression(String reduced){
+        solveForMultiplicationAndDivision();
+        solveForAdditionAndSubtraction();
+
+        for (double j:numbersForCalc) {
+            Log.i("solvedReduced:numbers", String.valueOf(j));
+        }
+        return numbersForCalc.get(0);
+    }
+
+    private void solveForMultiplicationAndDivision(){
+        solveForMathematicalOperations("*","/");
+
+        for(double n: numbersForCalc){
+            Log.d("num aft times divide",String.valueOf(n));
+        }
+        for(String s: operatorsForCalc){
+            Log.d("ops aft times divide",s);
+        }
+    }
+
+    private void solveForAdditionAndSubtraction(){
+        solveForMathematicalOperations("+","-");
+
+        for(double n: numbersForCalc){
+            Log.d("num aft minus plus",String.valueOf(n));
+        }
+        for(String s: operatorsForCalc){
+            Log.d("ops aft minus plus",s);
+        }
+    }
+
+    private void solveForMathematicalOperations(String operator1, String operator2){
+        for(int j=1; j<operatorsForCalc.size();j++){
+            if(operatorsForCalc.get(j).equals(operator1)||operatorsForCalc.get(j).equals(operator2)){
+                simplifyNumbersList(j,operatorsForCalc.get(j));
+                operatorsForCalc.set(j,null);
+            }
+        }
+
+        numbersForCalc.removeAll(Collections.singleton(null));
+        operatorsForCalc.removeAll(Collections.singleton(null));
+    }
+
     private String setNumbersAndOpsList(String expression){
-        String reducedExpression = ExpressionParser.parseExpression(expression);
-        numbersForCalc = new ArrayList<>();
-        operatorsForCalc = new ArrayList<>();
+        String reducedExpression = ExpressionParser.parseExpression(expression).concat("=");
+        numbersForCalc = new ArrayList<Double>();
+        operatorsForCalc = new ArrayList<String>();
+
         Log.i("reducedExp",reducedExpression);
+
         StringBuilder num = new StringBuilder();
         for(int i=0; i< reducedExpression.length();i++){
             String nextChar = reducedExpression.substring(i,i+1);
-            Log.i("i",String.valueOf(i));
+            Log.i("loop i",String.valueOf(i));
             Log.i("nextChar",nextChar);
             if(nextChar.matches(".*\\d+.*")||nextChar.matches("\\.")){
                 num.append(nextChar);
@@ -74,74 +122,9 @@ public class Solver {
         return reducedExpression;
     }
 
-    private boolean doesContainNestedBrackets(String expression){
-        int countOfOpenBrackets = expression.length() - expression.replace("(", "").length();
-        return countOfOpenBrackets>0;
-    }
-
-    private String reduceNestedBrackets(String expression){
-        //count first instance of ")"
-        //backward determine "(" --- to get the innermost () expression
-        //cut out the string inside innermost () expression
-        int indexOfFirstCloseBracket = expression.indexOf(")");
-        int indexOfAssociatedOpenBracket = -1;
-        String innerBracketExpression ="";
-        for(int i= indexOfFirstCloseBracket; i>0;i--){
-            if(expression.charAt(i)== '('){
-                indexOfAssociatedOpenBracket = i;
-                break;
-            }
-        }
-
-        if(indexOfAssociatedOpenBracket>0)
-            innerBracketExpression = expression.substring(indexOfAssociatedOpenBracket+1,indexOfFirstCloseBracket);
 
 
-        return innerBracketExpression;
-    }
 
-    private double solveReducedExpression(String reduced){
-
-        for(int j=1; j<operatorsForCalc.size();j++){
-            if(operatorsForCalc.get(j).equals("*")||operatorsForCalc.get(j).equals("/")){
-                simplifyNumbersList(j,operatorsForCalc.get(j));
-                operatorsForCalc.set(j,null);
-            }
-        }
-
-        numbersForCalc.removeAll(Collections.singleton(null));
-        operatorsForCalc.removeAll(Collections.singleton(null));
-
-        for(double n: numbersForCalc){
-            Log.d("num aft times divide",String.valueOf(n));
-        }
-        for(String s: operatorsForCalc){
-            Log.d("ops aft times divide",s);
-        }
-
-        for(int j=1; j<operatorsForCalc.size();j++){
-            if(operatorsForCalc.get(j).equals("+")||operatorsForCalc.get(j).equals("-")){
-                simplifyNumbersList(j,operatorsForCalc.get(j));
-                operatorsForCalc.set(j,null);
-            }
-        }
-
-        numbersForCalc.removeAll(Collections.singleton(null));
-        operatorsForCalc.removeAll(Collections.singleton(null));
-
-        for(double n: numbersForCalc){
-            Log.d("num aft minus plus",String.valueOf(n));
-        }
-        for(String s: operatorsForCalc){
-            Log.d("ops aft minus plus",s);
-        }
-
-        for (double j:numbersForCalc) {
-            Log.i("solvedReduced:numbers", String.valueOf(j));
-        }
-
-        return numbersForCalc.get(0);
-    }
 
     private void simplifyNumbersList(int i,String operator) {
         double num = 0;
