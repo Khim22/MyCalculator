@@ -18,11 +18,19 @@ public class Solver {
 
     public double evaluate(String expression){
         expression = parser.removeEqualSignAtEnd(expression);
+        expression = ExpressionParser.parseExpression(expression);
         while(parser.isExpressionContainingBrackets(expression)){
             //TODO: TO clean up
 
             if(parser.IsContainingNestedBrackets(expression)){
+                String nestedExpression = setNumbersAndOpsList(
+                    parser.getExpressionInNestedBrackets(expression)
+                );
+                Log.i("nestedExpression",nestedExpression);
 
+                double answerWithinBrackets = solveReducedExpression(nestedExpression);
+                Log.i("ansWithinNestBrac",String.valueOf(answerWithinBrackets));
+                expression = parser.setExpressionAfterEvaluatingExpressionInBracket(String.valueOf(answerWithinBrackets),expression);
             }
             String withinBracket = setNumbersAndOpsList(
                     parser.getExpressionWithinBracket(expression)

@@ -22,7 +22,9 @@ public class ExpressionParser {
     }
 
     private boolean isFirstCharOfAfterBracketExpressionOperator(String afterBracket){
-        return afterBracket!=null && !afterBracket.equals("") && operators.contains(afterBracket.substring(0,1));
+        return afterBracket!=null && !afterBracket.equals("")
+                && (operators.contains(afterBracket.substring(0,1))
+                || afterBracket.substring(0,1).equals(")"));
     }
 
     private boolean isLastCharOfBeforeBracketExpressionOperator(String beforeBracket){
@@ -86,7 +88,7 @@ public class ExpressionParser {
         Log.i("b4Brack",beforeBracket);
         Log.i("aftBrack",afterBracket);
 
-        String newExpression = expression.substring(expression.indexOf("(")+1,expression.indexOf(")"));
+        String newExpression = expression.substring(expression.indexOf("(")+1,expression.indexOf(")")+1);
         Log.i("newExpressionInBracket",newExpression);
         return newExpression;
     }
@@ -109,27 +111,31 @@ public class ExpressionParser {
 
     public boolean IsContainingNestedBrackets(String expression){
         boolean isContain = false;
+        Log.i("Nestedcontaining,i",expression);;
         for(int i =0,countOfOpenBracket=0,countOfCloseBracket=0;i<expression.length();i++){
+            Log.i("Nestedcount,i",String.valueOf(i));
             if(expression.charAt(i)=='(')
                 countOfOpenBracket++;
             if(expression.charAt(i)==')')
                 countOfCloseBracket++;
-            if(countOfOpenBracket>countOfCloseBracket+2){
+            if(countOfOpenBracket>countOfCloseBracket+1){
                 isContain = true;
                 break;
             }
+            Log.i("NestedcountOpen",String.valueOf(countOfOpenBracket));
+            Log.i("NestedcountClose",String.valueOf(countOfCloseBracket));
         }
         return isContain;
     }
 
 
-    private String getExpressionInNestedBrackets(String expression){
+    public String getExpressionInNestedBrackets(String expression){
         //count first instance of ")"
         //backward determine "(" --- to get the innermost () expression
         //cut out the string inside innermost () expression
         int indexOfFirstCloseBracket = expression.indexOf(")");
         int indexOfAssociatedOpenBracket = -1;
-        String innerBracketExpression ="";
+        String innerBracketExpression="";
         for(int i= indexOfFirstCloseBracket; i>0;i--){
             if(expression.charAt(i)== '('){
                 indexOfAssociatedOpenBracket = i;
@@ -137,7 +143,7 @@ public class ExpressionParser {
             }
         }
 
-        if(indexOfAssociatedOpenBracket>0){}
+        if(indexOfAssociatedOpenBracket>0)
             innerBracketExpression = expression.substring(indexOfAssociatedOpenBracket+1,indexOfFirstCloseBracket);
         beforeBracket = expression.substring(0,indexOfAssociatedOpenBracket);
         afterBracket = expression.substring(indexOfFirstCloseBracket+1);

@@ -1,5 +1,7 @@
 package com.example.deunique.mycalculator;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,20 +60,53 @@ public class MainActivity extends AppCompatActivity {
             switch(btn.getId()){
                 case R.id.btn_equal:
                     sb.append("=");
-                    if(evaluate(sb.toString())){
-                        sb = new StringBuilder();
-                    }
-                    else{
-                        Toast.makeText(getApplicationContext(),"Invalid expression",Toast.LENGTH_SHORT).show();
+                    try {
+                        if (evaluate(sb.toString())) {
+                            sb = new StringBuilder();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Invalid expression", Toast.LENGTH_SHORT).show();
+                        }
+                    }catch(Exception e){
+                        Log.e("InvalidCalulation",e.getMessage());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Math Error")
+                                .setMessage("The calculation returned with an error. Check your syntax again!")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setCancelable(false)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
                     }
                     break;
                 case R.id.btn_mem :
-                    memNum = Double.parseDouble(upperPanel.getText().toString());break;
+                    try{
+                        memNum = Double.parseDouble(upperPanel.getText().toString());
+                    }catch(NumberFormatException e){
+                        Log.e("InvalidCalulation",e.getMessage());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Math Error")
+                                .setMessage("The calculation returned with an error. Check your syntax again!")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setCancelable(false)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    }
+                    break;
                 case R.id.btn_clear:
                     lowerPanel.setText("0");
                     sb = new StringBuilder();
                     break;
                 default: {
+                    if(previousButton==R.id.btn_equal){
+                        sb = new StringBuilder(lowerPanel.getText());
+                    }
                     sb.append(btn.getText());
                     if(IsPreviousButtonOperator() && IsCurrentButtonOperator()){
                         sb.setLength(sb.length() - 1);
@@ -89,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             previousButton = btn.getId();
         }
 
-        private boolean evaluate(String exp){
+        private boolean evaluate(String exp) throws InvalidCalculationException{
             double result =0;
             String reducedExpression;
             Solver solver = new Solver();
