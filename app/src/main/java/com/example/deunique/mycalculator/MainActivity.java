@@ -31,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
         upperPanel = findViewById(R.id.txt_upper_panel);
         buttonList = new ArrayList<Integer>(Arrays.asList(
-                R.id.btn_clear,R.id.btn_mem,R.id.btn_open_bracket,R.id.btn_close_bracket,
+                R.id.btn_clear,R.id.btn_delete,
+                R.id.btn_mem,R.id.btn_get_mem,
+                R.id.btn_open_bracket,R.id.btn_close_bracket,
                 R.id.btn_plus,R.id.btn_1,R.id.btn_2,R.id.btn_3,
                 R.id.btn_minus,R.id.btn_4,R.id.btn_5,R.id.btn_6,
                 R.id.btn_multiply,R.id.btn_7,R.id.btn_8,R.id.btn_9,
@@ -99,9 +101,21 @@ public class MainActivity extends AppCompatActivity {
                                 .show();
                     }
                     break;
+                case R.id.btn_get_mem:
+                    lowerPanel.setText(String.valueOf(memNum));
+                    break;
                 case R.id.btn_clear:
                     lowerPanel.setText("0");
                     sb = new StringBuilder();
+                    break;
+                case R.id.btn_delete:
+                    if (sb.length() > 0) {
+                        sb.setLength(sb.length() - 1);
+                        lowerPanel.setText(sb.toString());
+                    }
+                    else{
+                        lowerPanel.setText("0");
+                    }
                     break;
                 default: {
                     if(previousButton==R.id.btn_equal){

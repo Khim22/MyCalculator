@@ -14,7 +14,8 @@
         <TextView
             android:id="@+id/txt_upper_panel"
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:textSize="30sp"/>
         <TextView
             android:id="@+id/txt_lower_panel"
             android:layout_width="match_parent"
@@ -33,25 +34,47 @@
             android:id="@+id/ctl_row1"
             android:layout_height="0dp"
             android:layout_weight="0.2">
-            <Button
-                android:id="@+id/btn_clear"
-                style="@style/button_potrait"
-                android:text="C"
-                />
-            <Button
-                android:id="@+id/btn_mem"
-                style="@style/button_potrait"
-                android:text="M"
-                />
+            <LinearLayout
+                android:weightSum="0.25"
+                android:orientation="vertical"
+                android:layout_marginBottom="-5dp"
+                style="@style/button_portrait">
+
+                <Button
+                    android:id="@+id/btn_clear"
+                    style="@style/button_portrait_half"
+                    android:layout_height="wrap_content"
+                    android:text="C" />
+                <Button
+                    android:id="@+id/btn_delete"
+                    style="@style/button_portrait_half"
+                    android:text="DEL"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:weightSum="0.25"
+                android:orientation="vertical"
+                style="@style/button_portrait">
+
+                <Button
+                    android:id="@+id/btn_mem"
+                    style="@style/button_portrait_half"
+                    android:text="MEM" />
+                <Button
+                    android:id="@+id/btn_get_mem"
+                    style="@style/button_portrait_half"
+                    android:text="GET"
+                    />
+            </LinearLayout>
             <Button
                 android:id="@+id/btn_open_bracket"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="("
                 />
 
             <Button
                 android:id="@+id/btn_close_bracket"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text=")" />
         </TableRow>
         <TableRow
@@ -61,22 +84,22 @@
 
             <Button
                 android:id="@+id/btn_divide"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="÷" />
 
             <Button
                 android:id="@+id/btn_7"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="7" />
 
             <Button
                 android:id="@+id/btn_8"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="8" />
 
             <Button
                 android:id="@+id/btn_9"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="9" />
 
         </TableRow>
@@ -87,22 +110,22 @@
 
             <Button
                 android:id="@+id/btn_multiply"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="×" />
 
             <Button
                 android:id="@+id/btn_4"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="4"
                 />
             <Button
                 android:id="@+id/btn_5"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="5"
                 />
             <Button
                 android:id="@+id/btn_6"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="6"
                 />
         </TableRow>
@@ -113,22 +136,22 @@
 
             <Button
                 android:id="@+id/btn_minus"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="-" />
 
             <Button
                 android:id="@+id/btn_1"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="1" />
 
             <Button
                 android:id="@+id/btn_2"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="2" />
 
             <Button
                 android:id="@+id/btn_3"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="3" />
 
         </TableRow>
@@ -139,22 +162,22 @@
 
             <Button
                 android:id="@+id/btn_plus"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="+" />
 
             <Button
                 android:id="@+id/btn_0"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="0"
                 />
             <Button
                 android:id="@+id/btn_decimal_point"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="."
                 />
             <Button
                 android:id="@+id/btn_equal"
-                style="@style/button_potrait"
+                style="@style/button_portrait"
                 android:text="="
                 />
         </TableRow>
